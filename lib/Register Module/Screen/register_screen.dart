@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hospital_gestion_application/Login%20Module/Components/my_button_login.dart';
-import 'package:hospital_gestion_application/Login%20Module/Components/my_text_login.dart';
-import 'package:hospital_gestion_application/Login%20Module/Components/my_textfield_login.dart';
-import 'package:hospital_gestion_application/Login%20Module/Components/register_ontap.dart';
-import 'package:hospital_gestion_application/Login%20Module/Screen/login_screen.dart';
-import 'package:hospital_gestion_application/Register%20Module/Components/style_register.dart';
+import '../../Components/Widgets/my_button.dart';
+import '../../Components/Widgets/my_text.dart';
+import '../../Components/Widgets/my_textfield.dart';
+import '../../Components/Widgets/text_ontap.dart';
+import '../../Login Module/Screen/login_screen.dart';
+import '../Components/style_register.dart';
 
 class RegisterScreen extends StatelessWidget {
+  final Function()? onTap;
   final TextEditingController? emailController,
       passwordController,
       confirmPasswordController;
@@ -15,6 +16,7 @@ class RegisterScreen extends StatelessWidget {
     this.emailController,
     this.passwordController,
     this.confirmPasswordController,
+    this.onTap,
   });
 
   @override
@@ -36,18 +38,18 @@ class RegisterScreen extends StatelessWidget {
 
         //Login Container
         Align(
-          alignment: Alignment.centerRight,
+          alignment: Alignment.centerLeft,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const MyTextLogin(
+              const MyText(
                 texto: 'Tu Salud CM',
                 fontSizeText: 25,
                 color: Color(0xFFEFF6FF),
               ),
               const SizedBox(height: 10),
               Padding(
-                padding: const EdgeInsets.only(right: 40),
+                padding: const EdgeInsets.only(left: 40),
                 //Login Container
                 child: ContainerRegister(
                   child: SingleChildScrollView(
@@ -55,7 +57,7 @@ class RegisterScreen extends StatelessWidget {
                       children: [
                         //Text: INICIO DE SESION
                         const SizedBox(height: 10),
-                        const MyTextLogin(
+                        const MyText(
                           texto: 'REGISTRATE',
                           fontSizeText: 30,
                           color: Color(0xFF16234D),
@@ -68,39 +70,39 @@ class RegisterScreen extends StatelessWidget {
                             children: [
                               //Text: Correo Electronico
                               const SizedBox(height: 20),
-                              const MyTextLogin(
+                              const MyText(
                                   texto: 'Correo :',
                                   fontSizeText: 20,
                                   color: Color(0xFF002F34)),
 
                               //TextField Email
-                              MyTextFieldLogin(
+                              MyTextField(
                                 controller: emailController,
                                 obscureText: false,
                               ),
 
                               //Text: Contraseña
                               const SizedBox(height: 20),
-                              const MyTextLogin(
+                              const MyText(
                                   texto: 'Contraseña :',
                                   fontSizeText: 20,
                                   color: Color(0xFF002F34)),
 
                               //TextField Password
-                              MyTextFieldLogin(
+                              MyTextField(
                                 controller: passwordController,
                                 obscureText: true,
                               ),
 
                               //Text: Confirmar Contraseña
                               const SizedBox(height: 20),
-                              const MyTextLogin(
+                              const MyText(
                                   texto: 'Confirmar Contraseña :',
                                   fontSizeText: 20,
                                   color: Color(0xFF002F34)),
 
                               //TextField Confirm Password
-                              MyTextFieldLogin(
+                              MyTextField(
                                 controller: confirmPasswordController,
                                 obscureText: true,
                               ),
@@ -114,18 +116,23 @@ class RegisterScreen extends StatelessWidget {
               ),
               //INGRESAR Button
               const SizedBox(height: 20),
-              const MyButtonLogin(onTap: null, text: 'INGRESAR'),
+              const MyButton(onTap: null, text: 'INGRESAR'),
 
               //Text: No estás registrado?
-              //OnTap: Navagate to RegisterScreen
+              //OnTap: Navagate to LoginScreen
               const SizedBox(height: 15),
               SizedBox(
                 height: 30,
                 width: 400,
-                child: RegisterOnTap(onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
-                }),
+                child: TextOnTap(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen()));
+                    },
+                    messageText: 'Ya estás Registrado? ',
+                    onTapText: 'Inicia Sesión Ahora'),
               )
             ],
           ),

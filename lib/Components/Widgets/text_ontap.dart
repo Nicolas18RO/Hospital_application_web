@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
-class RegisterOnTap extends StatelessWidget {
+class TextOnTap extends StatelessWidget {
+  final String messageText, onTapText;
   final VoidCallback? onTap;
 
-  const RegisterOnTap({
+  const TextOnTap({
     super.key,
     required this.onTap,
+    required this.messageText,
+    required this.onTapText,
   });
 
   @override
@@ -13,16 +16,16 @@ class RegisterOnTap extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
-          'No estás registrado?',
-          style: TextStyle(color: Color(0xfff7e6ff)),
+        Text(
+          messageText,
+          style: const TextStyle(color: Color(0xfff7e6ff)),
         ),
         const SizedBox(width: 5),
         GestureDetector(
           onTap: onTap,
-          child: const Text(
-            'Regístrate Ahora',
-            style: TextStyle(
+          child: Text(
+            onTapText,
+            style: const TextStyle(
               color: Colors.blue,
               fontWeight: FontWeight.bold,
             ),

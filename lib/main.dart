@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hospital_gestion_application/Login%20Module/Screen/login_screen.dart';
+import 'package:hospital_gestion_application/Components/Widgets/login_or_register.dart';
 
 void main() {
   runApp(const MainApp());
@@ -10,6 +10,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen());
+    return const MaterialApp(
+        debugShowCheckedModeBanner: false, home: LoginOrRegisterScreen());
   }
 }

@@ -7,7 +7,7 @@ class ContainerRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
+      height: 450,
       width: 400,
       decoration: BoxDecoration(
         gradient: const LinearGradient(colors: <Color>[

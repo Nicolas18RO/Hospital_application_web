@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class MyTextLogin extends StatelessWidget {
+class MyText extends StatelessWidget {
   final String texto;
   final double fontSizeText;
   final Color? color;
 
-  const MyTextLogin(
+  const MyText(
       {super.key, required this.texto, required this.fontSizeText, this.color});
 
   @override

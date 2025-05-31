@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:hospital_gestion_application/Login%20Module/Components/my_button_login.dart';
-import 'package:hospital_gestion_application/Login%20Module/Components/my_text_login.dart';
-import 'package:hospital_gestion_application/Login%20Module/Components/my_textfield_login.dart';
-import 'package:hospital_gestion_application/Login%20Module/Components/register_ontap.dart';
+import 'package:hospital_gestion_application/Components/Widgets/text_ontap.dart';
+import 'package:hospital_gestion_application/Components/Widgets/my_button.dart';
+import 'package:hospital_gestion_application/Components/Widgets/my_text.dart';
+import 'package:hospital_gestion_application/Components/Widgets/my_textfield.dart';
 import 'package:hospital_gestion_application/Login%20Module/Components/style_login.dart';
-import 'package:hospital_gestion_application/Login%20Module/Screen/register_screen.dart';
+import 'package:hospital_gestion_application/Register%20Module/Screen/register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
+  final Function()? onTap;
   final TextEditingController? emailController, passwordController;
   const LoginScreen({
     super.key,
     this.emailController,
     this.passwordController,
+    this.onTap,
   });
 
   @override
@@ -36,7 +38,7 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const MyTextLogin(
+              const MyText(
                 texto: 'Tu Salud CM',
                 fontSizeText: 25,
                 color: Color(0xFFEFF6FF),
@@ -50,12 +52,12 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       //Text: INICIO DE SESION
                       const SizedBox(height: 10),
-                      const MyTextLogin(
+                      const MyText(
                         texto: 'INICIO DE ',
                         fontSizeText: 30,
                         color: Color(0xFF16234D),
                       ),
-                      const MyTextLogin(
+                      const MyText(
                         texto: 'SESIÓN',
                         fontSizeText: 30,
                         color: Color(0xFF16234D),
@@ -68,26 +70,26 @@ class LoginScreen extends StatelessWidget {
                           children: [
                             //Text: Correo Electronico
                             const SizedBox(height: 20),
-                            const MyTextLogin(
+                            const MyText(
                                 texto: 'Correo :',
                                 fontSizeText: 20,
                                 color: Color(0xFF002F34)),
 
                             //TextField Email
-                            MyTextFieldLogin(
+                            MyTextField(
                               controller: emailController,
                               obscureText: false,
                             ),
 
                             //Text: Contraseña
                             const SizedBox(height: 20),
-                            const MyTextLogin(
+                            const MyText(
                                 texto: 'Contraseña :',
                                 fontSizeText: 20,
                                 color: Color(0xFF002F34)),
 
                             //TextField Password
-                            MyTextFieldLogin(
+                            MyTextField(
                               controller: passwordController,
                               obscureText: true,
                             ),
@@ -100,7 +102,7 @@ class LoginScreen extends StatelessWidget {
               ),
               //INGRESAR Button
               const SizedBox(height: 20),
-              const MyButtonLogin(onTap: null, text: 'INGRESAR'),
+              const MyButton(onTap: null, text: 'INGRESAR'),
 
               //Text: No estás registrado?
               //OnTap: Navagate to RegisterScreen
@@ -108,12 +110,15 @@ class LoginScreen extends StatelessWidget {
               SizedBox(
                 height: 30,
                 width: 400,
-                child: RegisterOnTap(onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RegisterScreen()));
-                }),
+                child: TextOnTap(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterScreen()));
+                    },
+                    messageText: 'No estás Registrado? ',
+                    onTapText: 'Registrate Ahora'),
               )
             ],
           ),
