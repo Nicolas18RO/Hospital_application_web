@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hospital_gestion_application/Components/Widgets/my_error_message.dart';
 import '../../Components/Widgets/my_button.dart';
 import '../../Components/Widgets/my_text.dart';
 import '../../Components/Widgets/my_textfield.dart';
@@ -6,19 +8,105 @@ import '../../Components/Widgets/text_ontap.dart';
 import '../../Login Module/Screen/login_screen.dart';
 import '../Components/style_register.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   final Function()? onTap;
-  final TextEditingController? emailController,
-      passwordController,
-      confirmPasswordController;
+
   const RegisterScreen({
     super.key,
-    this.emailController,
-    this.passwordController,
-    this.confirmPasswordController,
     this.onTap,
   });
 
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
+  //Metodo Registrar ususario de Sesion
+  Future<void> registrarSesion() async {
+    // Mostrar un círculo de carga mientras se inicia la sesión
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
+    try {
+      // Confirmar si la contraseña está confirmada
+      if (passwordController.text == confirmPasswordController.text) {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: emailController.text.trim(),
+                password: passwordController.text.trim());
+
+        // Obtener el usuario actual
+        User? user = userCredential.user;
+
+        if (user != null && !user.emailVerified) {
+          await user.sendEmailVerification();
+
+          // Cerrar el círculo de carga
+          Navigator.pop(context);
+
+          // Mostrar mensaje de verificación y esperar a que el usuario lo cierre
+          await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                backgroundColor: const Color.fromARGB(255, 198, 178, 233),
+                title: const Text(
+                  'Verificación de correo',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                content: Text(
+                  'Se ha enviado un correo de verificación a: ${user.email}',
+                  style: const TextStyle(color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Cerrar el diálogo
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => LoginScreen(onTap: () {}),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'OK',
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      } else {
+        // Cerrar el círculo de carga
+        Navigator.pop(context);
+        // Mostrar mensaje de error
+        mostrarMensajeError(context, "¡Las contraseñas no coinciden!");
+      }
+    } on FirebaseAuthException catch (e) {
+      // Cerrar el círculo de carga
+      Navigator.pop(context);
+      // Mostrar mensaje de error
+      mostrarMensajeError(context, e.code);
+    }
+  }
+
+  //=========================================================================================================================================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,7 +204,7 @@ class RegisterScreen extends StatelessWidget {
               ),
               //INGRESAR Button
               const SizedBox(height: 20),
-              const MyButton(onTap: null, text: 'INGRESAR'),
+              MyButton(onTap: () => registrarSesion(), text: 'REGISTRAR'),
 
               //Text: No estás registrado?
               //OnTap: Navagate to LoginScreen
