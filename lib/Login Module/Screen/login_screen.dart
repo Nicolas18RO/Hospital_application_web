@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hospital_gestion_application/Components/Widgets/my_error_message.dart';
@@ -5,9 +6,10 @@ import 'package:hospital_gestion_application/Components/Widgets/text_ontap.dart'
 import 'package:hospital_gestion_application/Components/Widgets/my_button.dart';
 import 'package:hospital_gestion_application/Components/Widgets/my_text.dart';
 import 'package:hospital_gestion_application/Components/Widgets/my_textfield.dart';
-import 'package:hospital_gestion_application/Home%20Module/Screen/home_screen.dart';
+import 'package:hospital_gestion_application/UserRole%20Module/Admin/Screen/admin_screen.dart';
 import 'package:hospital_gestion_application/Login%20Module/Components/style_login.dart';
 import 'package:hospital_gestion_application/Register%20Module/Screen/register_screen.dart';
+import 'package:hospital_gestion_application/UserRole%20Module/User/Screen/home_user_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function()? onTap;
@@ -106,9 +108,17 @@ class _LoginScreenState extends State<LoginScreen> {
         // Finalización del círculo de carga
         Navigator.pop(context);
 
-        // Redireccionar a HomePage si el correo está verificado
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+        // Check if user is admin (you need to implement this)
+        bool isAdmin = await checkIfUserIsAdmin(user.uid);
+
+        // Redirect based on user role
+        if (isAdmin) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const AdminScreen()));
+        } else {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const UserScreen()));
+        }
       }
     } on FirebaseAuthException catch (e) {
       // Finalización del círculo de carga
@@ -129,6 +139,22 @@ class _LoginScreenState extends State<LoginScreen> {
         default:
           mostrarMensajeError(context, 'Error desconocido: ${e.code}');
       }
+    }
+  }
+
+  // Function to check if user is admin
+  Future<bool> checkIfUserIsAdmin(String uid) async {
+    try {
+      DocumentSnapshot userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+      if (userDoc.exists) {
+        return userDoc['role'] == 'admin'; // Assuming you have a 'role' field
+      }
+      return false;
+    } catch (e) {
+      print('Error checking user role: $e');
+      return false;
     }
   }
 
