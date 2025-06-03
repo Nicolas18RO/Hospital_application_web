@@ -166,97 +166,110 @@ class _AgendarCitasScreenState extends State<AgendarCitasScreen> {
           Center(
             child: ContainerAgendarCitas(
               child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 20),
-
-                      // Doctor
-                      DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(
-                            labelText: 'Seleccionar Doctor'),
-                        items: _doctors.map((doctor) {
-                          return DropdownMenuItem(
-                            value: doctor.id,
-                            child: Text(
-                                'Dr. ${doctor.name} ${doctor.lastName} - ${doctor.specialty}'),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedDoctorId = value;
-                            _selectedDate = null;
-                            _selectedTime = null;
-                          });
-                        },
-                        validator: (value) =>
-                            value == null ? 'Seleccione un doctor' : null,
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      // Fecha
-                      ElevatedButton(
-                        onPressed: _selectedDoctorId == null
-                            ? null
-                            : () => _selectDate(context),
-                        child: Text(
-                          _selectedDate == null
-                              ? 'Seleccionar Fecha'
-                              : 'Fecha: ${DateFormat('yyyy-MM-dd').format(_selectedDate!)}',
-                        ),
-                      ),
-
-                      if (_selectedDate != null &&
-                          _selectedDoctorId != null) ...[
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
                         const SizedBox(height: 20),
-                        const Text('Horarios Disponibles:'),
-                        Wrap(
-                          spacing: 8,
-                          children: _availableSlots[_selectedDoctorId]
-                                  ?.map((time) {
-                                return ChoiceChip(
-                                  label: Text(time),
-                                  selected: _selectedTime == time,
-                                  onSelected: (selected) {
-                                    setState(() {
-                                      _selectedTime = selected ? time : null;
-                                    });
-                                  },
-                                );
-                              }).toList() ??
-                              [
-                                const Text(
-                                    'No hay horarios disponibles para este día')
-                              ],
+
+                        // Doctor
+                        DropdownButtonFormField<String>(
+                          decoration: const InputDecoration(
+                              labelText: 'Seleccionar Doctor',
+                              labelStyle:
+                                  TextStyle(fontWeight: FontWeight.bold)),
+                          items: _doctors.map((doctor) {
+                            return DropdownMenuItem(
+                              value: doctor.id,
+                              child: MyText(
+                                  texto:
+                                      'Dr. ${doctor.name} ${doctor.lastName} - ${doctor.specialty}',
+                                  fontSizeText: 15),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedDoctorId = value;
+                              _selectedDate = null;
+                              _selectedTime = null;
+                            });
+                          },
+                          validator: (value) =>
+                              value == null ? 'Seleccione un doctor' : null,
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Fecha
+                        ElevatedButton(
+                          onPressed: _selectedDoctorId == null
+                              ? null
+                              : () => _selectDate(context),
+                          child: MyText(
+                              texto: _selectedDate == null
+                                  ? 'Seleccionar Fecha'
+                                  : 'Fecha: ${DateFormat('yyyy-MM-dd').format(_selectedDate!)}',
+                              fontSizeText: 15),
+                        ),
+
+                        if (_selectedDate != null &&
+                            _selectedDoctorId != null) ...[
+                          const SizedBox(height: 20),
+                          const MyText(
+                              texto: 'Horarios Disponibles:', fontSizeText: 15),
+                          Wrap(
+                            spacing: 8,
+                            children:
+                                _availableSlots[_selectedDoctorId]?.map((time) {
+                                      return ChoiceChip(
+                                        label: Text(time),
+                                        selected: _selectedTime == time,
+                                        onSelected: (selected) {
+                                          setState(() {
+                                            _selectedTime =
+                                                selected ? time : null;
+                                          });
+                                        },
+                                      );
+                                    }).toList() ??
+                                    [
+                                      const MyText(
+                                          texto:
+                                              'No hay horarios disponibles para este día',
+                                          fontSizeText: 15)
+                                    ],
+                          ),
+                        ],
+
+                        const SizedBox(height: 20),
+
+                        // Motivo
+                        TextFormField(
+                          controller: _reasonController,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          decoration: const InputDecoration(
+                            labelText: 'Motivo de la cita',
+                            labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                            border: OutlineInputBorder(),
+                          ),
+                          maxLines: 3,
+                          validator: (value) => value!.isEmpty
+                              ? 'Ingrese el motivo de la cita'
+                              : null,
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        // Botón
+                        MyButtonUser(
+                          onTap: _isLoading ? null : _bookAppointment,
+                          text: _isLoading ? 'Agendando...' : 'Agendar Cita',
                         ),
                       ],
-
-                      const SizedBox(height: 20),
-
-                      // Motivo
-                      TextFormField(
-                        controller: _reasonController,
-                        decoration: const InputDecoration(
-                          labelText: 'Motivo de la cita',
-                          border: OutlineInputBorder(),
-                        ),
-                        maxLines: 3,
-                        validator: (value) => value!.isEmpty
-                            ? 'Ingrese el motivo de la cita'
-                            : null,
-                      ),
-
-                      const SizedBox(height: 30),
-
-                      // Botón
-                      MyButtonUser(
-                        onTap: _isLoading ? null : _bookAppointment,
-                        text: _isLoading ? 'Agendando...' : 'Agendar Cita',
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
