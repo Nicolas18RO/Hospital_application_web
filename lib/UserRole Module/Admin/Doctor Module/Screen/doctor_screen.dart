@@ -71,6 +71,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
           email: _emailController.text,
           workingDays: _selectedDays,
           availability: {},
+          id: '',
         );
 
         await FirebaseFirestore.instance

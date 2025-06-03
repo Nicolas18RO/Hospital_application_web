@@ -2,26 +2,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Doctor {
-  final String? id; // Nullable for new records
+  final String id;
   final String name;
   final String lastName;
   final String specialty;
-  final String document;
-  final String phone;
-  final String email;
   final List<String> workingDays;
   final Map<String, List<String>> availability;
+  final String document;
+  final String email;
+  final String phone;
 
   Doctor({
-    this.id,
+    required this.id,
     required this.name,
     required this.lastName,
     required this.specialty,
-    required this.document,
-    required this.phone,
-    required this.email,
-    this.workingDays = const [],
+    required this.workingDays,
     required this.availability,
+    required this.document,
+    required this.email,
+    required this.phone,
   });
 
   void addWorkingDay(String day) {
@@ -93,16 +93,22 @@ class Doctor {
     final data = doc.data() as Map<String, dynamic>;
     return Doctor(
       id: doc.id,
-      name: data['name'] ?? '',
-      lastName: data['lastName'] ?? '',
-      specialty: data['specialty'] ?? '',
-      document: data['document'] ?? '',
-      phone: data['phone'] ?? '',
-      email: data['email'] ?? '',
+      name: data['name']?.toString() ?? '',
+      lastName: data['lastName']?.toString() ?? '',
+      specialty: data['specialty']?.toString() ?? '',
       workingDays: List<String>.from(data['workingDays'] ?? []),
-      availability: Map<String, List<String>>.from(data['availability']
-              ?.map((key, value) => MapEntry(key, List<String>.from(value))) ??
-          {}),
+      availability: _convertAvailability(data['availability']),
+      document: data['document']?.toString() ?? '',
+      email: data['email']?.toString() ?? '',
+      phone: data['phone']?.toString() ?? '',
     );
+  }
+
+  static Map<String, List<String>> _convertAvailability(dynamic availability) {
+    if (availability == null) return {};
+    final map = availability as Map<String, dynamic>;
+    return map.map((key, value) {
+      return MapEntry(key, List<String>.from(value));
+    });
   }
 }

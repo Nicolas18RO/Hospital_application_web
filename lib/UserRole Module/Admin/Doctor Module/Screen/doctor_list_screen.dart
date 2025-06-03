@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hospital_gestion_application/Components/Widgets/my_text.dart';
 import '../Models/doctor_model.dart';
 
 class DoctorListScreen extends StatefulWidget {
@@ -131,18 +132,27 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
     );
   }
 
+  //===========================================================================================================================================================================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Disponibilidad de Doctores'),
+        backgroundColor: const Color(0xFF002F34),
+        title: const MyText(
+          texto: 'Disponibilidad Doctores',
+          fontSizeText: 20,
+          color: Color(0xFFEEFFFD),
+        ),
         actions: [
-          IconButton(
-            icon: _isSaving
-                ? const CircularProgressIndicator()
-                : const Icon(Icons.save),
-            onPressed:
-                _pendingUpdates.isEmpty || _isSaving ? null : _saveChanges,
+          Tooltip(
+            message: 'Guardar Cambios',
+            child: IconButton(
+              icon: _isSaving
+                  ? const CircularProgressIndicator()
+                  : const Icon(Icons.save, color: Color(0xFFEEFFFD), size: 35),
+              onPressed:
+                  _pendingUpdates.isEmpty || _isSaving ? null : _saveChanges,
+            ),
           ),
         ],
       ),
@@ -166,32 +176,39 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
               final isExpanded = _expandedDoctors.contains(doctor.id!);
 
               return Card(
+                color: const Color(0xFFC7FFFB),
                 margin: const EdgeInsets.only(bottom: 16),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Dr. ${editedDoctor.name} ${editedDoctor.lastName}',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
+                      //Text:Dr Name - Last Name
+                      MyText(
+                          texto:
+                              'Dr. ${editedDoctor.name} ${editedDoctor.lastName}',
+                          fontSizeText: 20),
+                      //Text: Especiality
                       Text(
                         editedDoctor.specialty,
                         style: Theme.of(context)
                             .textTheme
                             .titleMedium
-                            ?.copyWith(color: Colors.grey[600]),
+                            ?.copyWith(color: const Color(0xFF0C5155)),
                       ),
                       const SizedBox(height: 8),
+                      //TextButton: isExpanded?
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton.icon(
                           icon: Icon(isExpanded
                               ? Icons.expand_less
                               : Icons.expand_more),
-                          label: Text(
-                              isExpanded ? 'Ocultar Horario' : 'Ver Horario'),
+                          label: MyText(
+                              texto: isExpanded
+                                  ? 'Ocultar Horario'
+                                  : 'Ver Horario',
+                              fontSizeText: 15),
                           onPressed: () {
                             setState(() {
                               if (isExpanded) {
@@ -205,10 +222,9 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
                       ),
                       if (isExpanded) ...[
                         const Divider(),
-                        const Text(
-                          'Días de trabajo:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                        //Text: Dias de trabajo
+                        const MyText(
+                            texto: 'Días de trabajo:', fontSizeText: 13),
                         const SizedBox(height: 8),
                         ..._allDays
                             .map((day) => _buildDayAvailability(doctor, day))

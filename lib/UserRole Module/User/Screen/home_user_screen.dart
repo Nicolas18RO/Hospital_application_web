@@ -54,7 +54,7 @@ class UserScreen extends StatelessWidget {
                   onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const AgendarCitasScreen(),
+                        builder: (context) => AgendarCitaScreen(),
                       )),
                   text: 'Agendar Cita')
             ],
