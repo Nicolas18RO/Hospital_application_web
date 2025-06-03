@@ -6,6 +6,8 @@ import 'package:hospital_gestion_application/Components/Widgets/my_button.dart';
 import 'package:hospital_gestion_application/Components/Widgets/my_text.dart';
 import 'package:hospital_gestion_application/UserRole%20Module/Components/style_user.dart';
 
+import '../Models/doctor_model.dart';
+
 class DoctorScreen extends StatefulWidget {
   const DoctorScreen({super.key});
 
@@ -22,6 +24,15 @@ class _DoctorScreenState extends State<DoctorScreen> {
   final TextEditingController _documentController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final List<String> _selectedDays = [];
+  final List<String> _daysOfWeek = [
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado'
+  ];
 
   bool _isLoading = false;
 
@@ -36,6 +47,53 @@ class _DoctorScreenState extends State<DoctorScreen> {
     super.dispose();
   }
 
+  void _toggleDay(String day) {
+    setState(() {
+      if (_selectedDays.contains(day)) {
+        _selectedDays.remove(day);
+      } else {
+        _selectedDays.add(day);
+      }
+    });
+  }
+
+  Future<void> _registerDoctor() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
+
+      try {
+        final newDoctor = Doctor(
+          name: _nameController.text,
+          lastName: _lastNameController.text,
+          specialty: _specialtyController.text,
+          document: _documentController.text,
+          phone: _phoneController.text,
+          email: _emailController.text,
+          workingDays: _selectedDays,
+          availability: {},
+        );
+
+        await FirebaseFirestore.instance
+            .collection('doctors')
+            .add(newDoctor.toMap());
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Doctor registrado exitosamente!')),
+        );
+        _formKey.currentState?.reset();
+        setState(() => _selectedDays.clear());
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al registrar: $e')),
+        );
+      } finally {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  //===========================================================================================================================
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +102,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
           //Image Background
           Positioned.fill(
             child: Image.asset(
-              'lib/Components/Images/HomeWallpaper.jpg',
+              'lib/Components/Images/HomeWallpaper.webp',
               fit: BoxFit.cover,
             ),
           ),
@@ -156,12 +214,35 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       ),
                       const SizedBox(height: 20),
 
+                      //New Test
+                      // Add Working Days Selection
+                      const SizedBox(height: 10),
+                      const MyText(
+                        texto: 'Días de Trabajo',
+                        fontSizeText: 16,
+                        color: Colors.black54,
+                      ),
+                      Wrap(
+                        spacing: 8.0,
+                        children: _daysOfWeek.map((day) {
+                          return FilterChip(
+                            label: Text(day),
+                            selected: _selectedDays.contains(day),
+                            onSelected: (bool selected) {
+                              _toggleDay(day);
+                            },
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 20),
+
                       // Register Doctor Button
                       MyButton(
                         onTap: _isLoading ? null : _registerDoctor,
                         text:
                             _isLoading ? 'Registrando...' : 'Registrar Doctor',
-                      )
+                      ),
+                      SizedBox(height: 10)
                     ],
                   ),
                 ),
@@ -171,43 +252,5 @@ class _DoctorScreenState extends State<DoctorScreen> {
         ],
       ),
     );
-  }
-
-  Future<void> _registerDoctor() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-
-      try {
-        // Get reference to doctors collection
-        final CollectionReference doctors =
-            FirebaseFirestore.instance.collection('doctors');
-
-        // Create a new document with auto-generated ID
-        await doctors.add({
-          'name': _nameController.text,
-          'lastName': _lastNameController.text,
-          'specialty': _specialtyController.text,
-          'document': _documentController.text,
-          'phone': _phoneController.text,
-          'email': _emailController.text,
-          'createdAt': FieldValue.serverTimestamp(),
-          'updatedAt': FieldValue.serverTimestamp(),
-        });
-
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Doctor registrado exitosamente!')),
-        );
-
-        // Clear the form
-        _formKey.currentState!.reset();
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al registrar: $e')),
-        );
-      } finally {
-        setState(() => _isLoading = false);
-      }
-    }
   }
 }

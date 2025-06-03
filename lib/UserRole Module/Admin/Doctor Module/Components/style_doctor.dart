@@ -7,7 +7,7 @@ class ContainerFormDoctor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height / 1.6,
+      height: MediaQuery.of(context).size.height / 1.4,
       width: MediaQuery.of(context).size.width / 1.2,
       decoration: BoxDecoration(
         gradient: const LinearGradient(colors: <Color>[

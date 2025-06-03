@@ -16,7 +16,7 @@ class UserScreen extends StatelessWidget {
           //Image Background
           Positioned.fill(
             child: Image.asset(
-              'lib/Components/Images/HomeWallpaper.jpg',
+              'lib/Components/Images/HomeWallpaper.webp',
               fit: BoxFit.cover,
             ),
           ),

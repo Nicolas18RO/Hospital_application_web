@@ -71,9 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
-                content: Text(
+                content: const Text(
                   'Debes verificar tu correo electrónico antes de iniciar sesión.\n\n¿Quieres que te enviemos un nuevo correo de verificación?',
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
                 actions: [
@@ -167,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
         //Image Background
         Positioned.fill(
           child: Image.asset(
-            'lib/Components/Images/LoginWallpaper.jpg',
+            'lib/Components/Images/LoginWallpaper.webp',
             fit: BoxFit.cover,
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hospital_gestion_application/UserRole%20Module/Admin/Components/style_admin.dart';
+import 'package:hospital_gestion_application/UserRole%20Module/Admin/Doctor%20Module/Screen/doctor_list_screen.dart';
 import 'package:hospital_gestion_application/UserRole%20Module/Admin/Doctor%20Module/Screen/doctor_screen.dart';
 import 'package:hospital_gestion_application/Components/Widgets/my_button.dart';
 import 'package:hospital_gestion_application/Components/Widgets/my_text.dart';
@@ -16,7 +17,7 @@ class AdminScreen extends StatelessWidget {
           //Image Background
           Positioned.fill(
             child: Image.asset(
-              'lib/Components/Images/HomeWallpaper.jpg',
+              'lib/Components/Images/HomeWallpaper.webp',
               fit: BoxFit.cover,
             ),
           ),
@@ -37,28 +38,56 @@ class AdminScreen extends StatelessWidget {
 
           //Container
           Center(
-              child: ContainerAdmin(
-                  child: Column(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                  width: 400,
-                  height: 300,
-                  child: Image.asset(
-                    'lib/Components/Images/Doctor.jpg',
-                    fit: BoxFit.scaleDown,
-                  )),
-
-              //Registrar Doctor
-              const SizedBox(height: 20),
-              MyButton(
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DoctorScreen(),
+              ContainerAdmin(
+                  child: Column(
+                children: [
+                  SizedBox(
+                      width: 400,
+                      height: 300,
+                      child: Image.asset(
+                        'lib/Components/Images/Doctor.webp',
+                        fit: BoxFit.scaleDown,
                       )),
-                  text: 'Registrar Doctor')
+
+                  //Registrar Doctor
+                  const SizedBox(height: 20),
+                  MyButton(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DoctorScreen(),
+                          )),
+                      text: 'Registrar Doctor')
+                ],
+              )),
+              const SizedBox(width: 50),
+              ContainerAdmin(
+                  child: Column(
+                children: [
+                  SizedBox(
+                      width: 400,
+                      height: 300,
+                      child: Image.asset(
+                        'lib/Components/Images/Schedule.webp',
+                        fit: BoxFit.scaleDown,
+                      )),
+
+                  //Registrar Doctor
+                  const SizedBox(height: 20),
+                  MyButton(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DoctorListScreen(),
+                          )),
+                      text: 'Horario Doctor')
+                ],
+              )),
             ],
-          )))
+          ))
         ],
       ),
     );
